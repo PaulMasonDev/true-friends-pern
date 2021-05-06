@@ -4,7 +4,7 @@ import { FriendsContext } from "../context/FriendsContext";
 
 const SearchBar = () => {
   const [searchValue, setSearchValue] = useState("");
-  const { friends, setFilteredFriends, calcAge } = useContext(FriendsContext);
+  const { friends, setFilteredFriends } = useContext(FriendsContext);
   let history = useHistory();
   useEffect(() => {
     setSearchValue("");
@@ -17,8 +17,7 @@ const SearchBar = () => {
     const filteredFriends = friends.filter(
       (friend) =>
         friend.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        friend.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        calcAge(friend.birthday).toString() === searchTerm
+        friend.last_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredFriends(filteredFriends);
   };
@@ -31,7 +30,7 @@ const SearchBar = () => {
     <div className="container">
       <div className="text-center mb-5 d-flex justify-content-evenly align-items-center form-group">
         <label htmlFor="search" className="display-6">
-          Search Name or Age
+          Search Name
         </label>
         <input
           id="search"

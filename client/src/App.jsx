@@ -5,43 +5,69 @@ import AddOrUpdateEvent from "./components/AddOrUpdateEvent";
 import Header from "./components/Header";
 import { FriendsContextProvider } from "./context/FriendsContext";
 import Home from "./routes/Home";
+import FriendDetails from "./components/FriendDetails";
+import { UtilityContextProvider } from "./context/UtilityContext";
+import { EventsContextProvider } from "./context/EventsContext";
+import AddOrUpdateItem from "./components/AddOrUpdateItem";
 
 const App = () => {
   return (
-    <FriendsContextProvider>
-      <div className="container">
-        <Header />
-        <Router>
-          <Switch>
-            <Route exact path="/" component={Home} />
+    <UtilityContextProvider>
+      <FriendsContextProvider>
+        <EventsContextProvider>
+          <div className="container">
+            <Header />
+            <Router>
+              <Switch>
+                <Route exact path="/" component={Home} />
 
-            <Route
-              exact
-              path="/addOrUpdateFriend/:id"
-              component={AddOrUpdateFriend}
-            />
+                <Route
+                  exact
+                  path="/addOrUpdateFriend/:id"
+                  component={AddOrUpdateFriend}
+                />
 
-            <Route
-              exact
-              path="/addOrUpdateEvent/:id"
-              component={AddOrUpdateEvent}
-            />
+                <Route
+                  exact
+                  path="/addOrUpdateEvent/:friendId"
+                  component={AddOrUpdateEvent}
+                />
 
-            <Route
-              exact
-              path="/addOrUpdateFriend/:id/Edit/:friendId"
-              component={AddOrUpdateFriend}
-            />
+                <Route
+                  exact
+                  path="/addOrUpdateFriend/:id/Edit/:friendId"
+                  component={AddOrUpdateFriend}
+                />
 
-            <Route
-              exact
-              path="/addOrUpdateFriend/:id/Edit/:friendId"
-              component={AddOrUpdateEvent}
-            />
-          </Switch>
-        </Router>
-      </div>
-    </FriendsContextProvider>
+                <Route
+                  exact
+                  path="/addOrUpdateEvent/:eventId/Edit/"
+                  component={AddOrUpdateEvent}
+                />
+
+                <Route
+                  exact
+                  path="/addOrUpdateItem/:eventId"
+                  component={AddOrUpdateItem}
+                />
+
+                <Route
+                  exact
+                  path="/addOrUpdateItem/:itemId/Edit/"
+                  component={AddOrUpdateItem}
+                />
+
+                <Route
+                  exact
+                  path="/Friend/:friendId"
+                  component={FriendDetails}
+                />
+              </Switch>
+            </Router>
+          </div>
+        </EventsContextProvider>
+      </FriendsContextProvider>
+    </UtilityContextProvider>
   );
 };
 
