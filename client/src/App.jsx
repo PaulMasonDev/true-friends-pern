@@ -7,6 +7,7 @@ import { FriendsContextProvider } from "./context/FriendsContext";
 import Home from "./routes/Home";
 import FriendDetails from "./components/FriendDetails";
 import EventDetails from "./components/EventDetails";
+import ItemDetails from "./components/ItemDetails";
 import { UtilityContextProvider } from "./context/UtilityContext";
 import { EventsContextProvider } from "./context/EventsContext";
 import AddOrUpdateItem from "./components/AddOrUpdateItem";
@@ -71,6 +72,8 @@ const App = () => {
                     path="/Event/:eventId"
                     component={EventDetails}
                   />
+
+                  <Route exact path="/Item/:itemId" component={ItemDetails} />
                 </Switch>
               </Router>
             </div>

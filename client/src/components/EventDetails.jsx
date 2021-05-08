@@ -10,21 +10,13 @@ const EventDetail = () => {
   const { eventId } = useParams();
   let history = useHistory();
   const { selectedFriend } = useContext(FriendsContext);
-  const {
-    events,
-    setEvents,
-    selectedEvent,
-    setSelectedEvent,
-    deleteEvent,
-  } = useContext(EventsContext);
-  const { items, setItems, deleteItem } = useContext(ItemsContext);
-  const {
-    displayFriendlyDate,
-    calcEnding,
-    displayPronoun,
-    daysUntilEvent,
-    getNextBirthday,
-  } = useContext(UtilityContext);
+  const { events, setEvents, selectedEvent, setSelectedEvent } = useContext(
+    EventsContext
+  );
+  const { items, setItems, deleteItem, setSelectedItem } = useContext(
+    ItemsContext
+  );
+  const { calcEnding } = useContext(UtilityContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,37 +54,31 @@ const EventDetail = () => {
     history.push(`/AddOrUpdateItem/${eventId}`);
   };
 
-  // const handleAddItem = (e, eventId) => {
-  //   e.stopPropagation();
-  //   history.push(`/addOrUpdateItem/${eventId}`);
-  // };
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
+    history.push(`/item/${item.id}`);
+  };
 
   return (
     <div className="container mt-5">
-      {/* {friend ? (
+      {selectedEvent ? (
         <>
           <h1 className="text-center">
-            {friend.first_name}
-            {friend.first_name && calcEnding(friend.first_name)} Upcoming Events
+            {selectedFriend.first_name}
+            {selectedFriend.first_name &&
+              calcEnding(selectedFriend.first_name)}{" "}
+            {selectedEvent.name} List of Items
           </h1>
-          <p className="display-6 text-center">
-            {friend.gender && displayPronoun(friend.gender)} birthday is coming
-            up in{" "}
-            {friend.birthday &&
-              daysUntilEvent(getNextBirthday(friend.birthday))}
-            {" days "}
-            on {friend.birthday && getNextBirthday(friend.birthday)}
-          </p>
         </>
-      ) : null} */}
-      {/* <div className="d-flex justify-content-center">
+      ) : null}
+      <div className="d-flex justify-content-center">
         <button
           className="btn btn-lg btn-success"
-          onClick={(e) => handleAddItem(e, event.id)}
+          onClick={(e) => handleAddItem(e, selectedEvent.id)}
         >
           Add Item
         </button>
-      </div> */}
+      </div>
 
       <table className="table table-striped table-hover">
         <thead>
@@ -107,10 +93,7 @@ const EventDetail = () => {
           {items &&
             items.map((item) => {
               return (
-                <tr
-                  key={item.id}
-                  onClick={() => history.push(`/item/${item.id}`)}
-                >
+                <tr key={item.id} onClick={() => handleItemClick(item)}>
                   <td>
                     <div className="d-flex justify-content-around">
                       <button
