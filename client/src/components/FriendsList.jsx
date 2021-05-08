@@ -10,6 +10,7 @@ import { UtilityContext } from "../context/UtilityContext";
 const FriendsList = () => {
   const {
     setFriends,
+    setSelectedFriend,
     filteredFriends,
     setFilteredFriends,
     deleteFriend,
@@ -58,6 +59,11 @@ const FriendsList = () => {
     history.push(`/AddOrUpdateEvent/${friendId}`);
   };
 
+  const handleFriendClick = (friend) => {
+    setSelectedFriend(friend);
+    history.push(`/friend/${friend.id}`);
+  };
+
   return (
     <div>
       <table className="table table-striped table-hover">
@@ -75,10 +81,7 @@ const FriendsList = () => {
           {filteredFriends &&
             filteredFriends.map((friend) => {
               return (
-                <tr
-                  key={friend.id}
-                  onClick={() => history.push(`/friend/${friend.id}`)}
-                >
+                <tr key={friend.id} onClick={() => handleFriendClick(friend)}>
                   <td>
                     <div className="d-flex justify-content-around">
                       <button

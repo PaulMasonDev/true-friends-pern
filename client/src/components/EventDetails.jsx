@@ -1,16 +1,23 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
-import EventFinder from "../API/EventFinder";
+import ItemFinder from "../API/ItemFinder";
 import { FriendsContext } from "../context/FriendsContext";
 import { UtilityContext } from "../context/UtilityContext";
 import { EventsContext } from "../context/EventsContext";
+import { ItemsContext } from "../context/ItemsContext";
 
 const EventDetail = () => {
-  const [friend, setFriend] = useState({});
-  const { friendId } = useParams();
+  const { eventId } = useParams();
   let history = useHistory();
-  const { friends } = useContext(FriendsContext);
-  const { events, setEvents, deleteEvent } = useContext(EventsContext);
+  const { selectedFriend } = useContext(FriendsContext);
+  const {
+    events,
+    setEvents,
+    selectedEvent,
+    setSelectedEvent,
+    deleteEvent,
+  } = useContext(EventsContext);
+  const { items, setItems, deleteItem } = useContext(ItemsContext);
   const {
     displayFriendlyDate,
     calcEnding,
@@ -22,43 +29,43 @@ const EventDetail = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const events = await EventFinder.get(`/${friendId}`);
-        setEvents(events.data.foundEvents);
+        const items = await ItemFinder.get(`/${eventId}`);
+        setItems(items.data.foundItems);
       } catch (error) {
         console.error(error.message);
       }
     };
     fetchData();
-    const friendToSet = friends.filter((friend) => friend.id === friendId);
+    const eventToSet = events.filter((event) => event.id === eventId);
 
-    setFriend(friendToSet[0]);
-  }, [friendId, friend, friends, setEvents]);
+    setSelectedEvent(eventToSet[0]);
+  }, [eventId, events, setEvents]);
 
-  const handleEdit = (e, eventId) => {
+  const handleEdit = (e, itemId) => {
     e.stopPropagation();
-    history.push(`/AddOrUpdateEvent/${eventId}/Edit`);
+    history.push(`/AddOrUpdateItem/${itemId}/Edit`);
   };
 
-  const handleDelete = (e, event) => {
+  const handleDelete = (e, item) => {
     e.stopPropagation();
-    const response = prompt(`Are you sure you want to delete ${event.name}?`);
+    const response = prompt(`Are you sure you want to delete ${item.name}?`);
     if (response != null) {
-      deleteEvent(event.id);
+      deleteItem(item.id);
       //NEED TO FIGURE OUT A PAGE REFRESH
     } else {
-      alert(`${event.name} thanks you for sparing them`);
+      alert(`${item.name} thanks you for sparing them`);
     }
-  };
-
-  const handleAddEvent = (e, friendId) => {
-    e.stopPropagation();
-    history.push(`/AddOrUpdateEvent/${friendId}`);
   };
 
   const handleAddItem = (e, eventId) => {
     e.stopPropagation();
-    history.push(`/addOrUpdateItem/${eventId}`);
+    history.push(`/AddOrUpdateItem/${eventId}`);
   };
+
+  // const handleAddItem = (e, eventId) => {
+  //   e.stopPropagation();
+  //   history.push(`/addOrUpdateItem/${eventId}`);
+  // };
 
   return (
     <div className="container mt-5">
@@ -77,66 +84,57 @@ const EventDetail = () => {
             on {friend.birthday && getNextBirthday(friend.birthday)}
           </p>
         </>
-      ) : null}
-      <div className="d-flex justify-content-center">
+      ) : null} */}
+      {/* <div className="d-flex justify-content-center">
         <button
           className="btn btn-lg btn-success"
-          onClick={(e) => handleAddEvent(e, friend.id)}
+          onClick={(e) => handleAddItem(e, event.id)}
         >
-          Add Event
+          Add Item
         </button>
-      </div>
+      </div> */}
 
       <table className="table table-striped table-hover">
         <thead>
           <tr>
             <th scope="col"></th>
-            <th scope="col">Event Name</th>
-            <th scope="col">Event Date</th>
-            <th scope="col">Notes</th>
-            <th scope="col"></th>
+            <th scope="col">Item Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Purchased?</th>
           </tr>
         </thead>
         <tbody>
-          {events &&
-            events.map((event) => {
+          {items &&
+            items.map((item) => {
               return (
                 <tr
-                  key={event.id}
-                  onClick={() => history.push(`/event/${event.id}`)}
+                  key={item.id}
+                  onClick={() => history.push(`/item/${item.id}`)}
                 >
                   <td>
                     <div className="d-flex justify-content-around">
                       <button
                         className="btn btn-warning"
-                        onClick={(e) => handleEdit(e, event.id)}
+                        onClick={(e) => handleEdit(e, item.id)}
                       >
-                        Edit event
+                        Edit item
                       </button>
                       <button
                         className="btn btn-danger"
-                        onClick={(e) => handleDelete(e, event)}
+                        onClick={(e) => handleDelete(e, item)}
                       >
-                        Delete event
+                        Delete item
                       </button>
                     </div>
                   </td>
-                  <td className="h4">{event.name}</td>
-                  <td className="h4">{displayFriendlyDate(event.date)}</td>
-                  <td className="h6">{event.notes}</td>
-                  <td>
-                    <button
-                      className="btn btn-success"
-                      onClick={(e) => handleAddItem(e, event.id)}
-                    >
-                      Add Item
-                    </button>
-                  </td>
+                  <td className="h4">{item.name}</td>
+                  <td className="h4">{item.description}</td>
+                  <td className="h6">{item.ispurchased}</td>
                 </tr>
               );
             })}
         </tbody>
-        </table>*/}
+      </table>
     </div>
   );
 };

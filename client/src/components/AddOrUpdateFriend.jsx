@@ -32,10 +32,10 @@ const AddOrUpdateFriend = () => {
     result[0] ? result[0].birthday : new Date()
   );
   const [isMother, setIsMother] = useState(
-    result[0] ? (result[0].ismother === true ? "true" : "no") : "no"
+    result[0] ? (result[0].ismother === true ? "yes" : "no") : "no"
   );
   const [isFather, setIsFather] = useState(
-    result[0] ? (result[0].isfather === true ? "true" : "no") : "no"
+    result[0] ? (result[0].isfather === true ? "yes" : "no") : "no"
   );
 
   const { addFriends } = useContext(FriendsContext);

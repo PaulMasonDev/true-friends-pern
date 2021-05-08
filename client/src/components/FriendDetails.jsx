@@ -9,8 +9,12 @@ const FriendDetail = () => {
   const [friend, setFriend] = useState({});
   const { friendId } = useParams();
   let history = useHistory();
-  const { friends } = useContext(FriendsContext);
-  const { events, setEvents, deleteEvent } = useContext(EventsContext);
+  const { friends, selectedFriend, setSelectedFriend } = useContext(
+    FriendsContext
+  );
+  const { events, setEvents, deleteEvent, setSelectedEvent } = useContext(
+    EventsContext
+  );
   const {
     displayFriendlyDate,
     calcEnding,
@@ -31,7 +35,7 @@ const FriendDetail = () => {
     fetchData();
     const friendToSet = friends.filter((friend) => friend.id === friendId);
 
-    setFriend(friendToSet[0]);
+    setSelectedFriend(friendToSet[0]);
   }, [friendId, friend, friends, setEvents]);
 
   const handleEdit = (e, eventId) => {
@@ -60,28 +64,37 @@ const FriendDetail = () => {
     history.push(`/addOrUpdateItem/${eventId}`);
   };
 
+  const handleEventClick = (event) => {
+    setSelectedEvent(event);
+    history.push(`/event/${event.id}`);
+  };
+
   return (
     <div className="container mt-5">
-      {friend ? (
+      {selectedFriend ? (
         <>
           <h1 className="text-center">
-            {friend.first_name}
-            {friend.first_name && calcEnding(friend.first_name)} Upcoming Events
+            {selectedFriend.first_name}
+            {selectedFriend.first_name &&
+              calcEnding(selectedFriend.first_name)}{" "}
+            Upcoming Events
           </h1>
           <p className="display-6 text-center">
-            {friend.gender && displayPronoun(friend.gender)} birthday is coming
-            up in{" "}
-            {friend.birthday &&
-              daysUntilEvent(getNextBirthday(friend.birthday))}
+            {selectedFriend.gender && displayPronoun(selectedFriend.gender)}{" "}
+            birthday is coming up in{" "}
+            {selectedFriend.birthday &&
+              daysUntilEvent(getNextBirthday(selectedFriend.birthday))}
             {" days "}
-            on {friend.birthday && getNextBirthday(friend.birthday)}
+            on{" "}
+            {selectedFriend.birthday &&
+              getNextBirthday(selectedFriend.birthday)}
           </p>
         </>
       ) : null}
       <div className="d-flex justify-content-center">
         <button
           className="btn btn-lg btn-success"
-          onClick={(e) => handleAddEvent(e, friend.id)}
+          onClick={(e) => handleAddEvent(e, selectedFriend.id)}
         >
           Add Event
         </button>
@@ -101,10 +114,7 @@ const FriendDetail = () => {
           {events &&
             events.map((event) => {
               return (
-                <tr
-                  key={event.id}
-                  onClick={() => history.push(`/event/${event.id}`)}
-                >
+                <tr key={event.id} onClick={() => handleEventClick(event)}>
                   <td>
                     <div className="d-flex justify-content-around">
                       <button
